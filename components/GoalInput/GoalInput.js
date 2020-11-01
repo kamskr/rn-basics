@@ -2,28 +2,35 @@ import React, { useState } from "react";
 import { View, TextInput, Button, Modal } from "react-native";
 import { styles } from "./GoalInputStyles";
 
-const GoalInput = ({ handleAddGoal, visible }) => {
+const GoalInput = (props) => {
   const [enteredGoal, setEnteredGoal] = useState("");
 
-  const handleChangeText = (enteredText) => {
+  const goalInputHandler = (enteredText) => {
     setEnteredGoal(enteredText);
   };
 
   const addGoalHandler = () => {
-    handleAddGoal(enteredGoal);
+    props.onAddGoal(enteredGoal);
     setEnteredGoal("");
   };
 
   return (
-    <Modal visible={visible} animationType="slide">
+    <Modal visible={props.visible} animationType="slide">
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Course goal"
-          style={styles.textInput}
-          onChangeText={handleChangeText}
+          placeholder="Course Goal"
+          style={styles.input}
+          onChangeText={goalInputHandler}
           value={enteredGoal}
         />
-        <Button title="ADD" onPress={addGoalHandler} />
+        <View style={styles.buttonContainer}>
+          <View style={styles.button}>
+            <Button title="CANCEL" color="red" onPress={props.onCancel} />
+          </View>
+          <View style={styles.button}>
+            <Button title="ADD" onPress={addGoalHandler} />
+          </View>
+        </View>
       </View>
     </Modal>
   );

@@ -7,32 +7,38 @@ export default function App() {
   const [courseGoals, setCourseGoals] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
 
-  const addGoalHandler = (enteredGoal) => {
+  const addGoalHandler = (goalTitle) => {
     setCourseGoals((currentGoals) => [
       ...currentGoals,
-      { key: Math.random().toString(), value: enteredGoal },
+      { id: Math.random().toString(), value: goalTitle },
     ]);
     setIsAddMode(false);
   };
 
   const removeGoalHandler = (goalId) => {
     setCourseGoals((currentGoals) => {
-      console.log("delete " + goalId);
-      return [currentGoals.filter((goal) => goal.key !== goalId)];
+      return currentGoals.filter((goal) => goal.id !== goalId);
     });
+  };
+
+  const cancelGoalAdditionHandler = () => {
+    setIsAddMode(false);
   };
   return (
     <View style={styles.screen}>
       <Button title="Add New Goal" onPress={() => setIsAddMode(true)} />
-      <GoalInput handleAddGoal={addGoalHandler} visible={isAddMode} />
-      {/* FlatList takes key or id if you dont have them you can map any property by using "keyExtractor" props */}
+      <GoalInput
+        visible={isAddMode}
+        onAddGoal={addGoalHandler}
+        onCancel={cancelGoalAdditionHandler}
+      />
       <FlatList
         data={courseGoals}
         renderItem={(itemData) => (
           <GoalItem
-            key={itemData.item.key}
-            value={itemData.item.value}
-            handleDelete={removeGoalHandler}
+            id={itemData.item.id}
+            onDelete={removeGoalHandler}
+            title={itemData.item.value}
           />
         )}
       />
